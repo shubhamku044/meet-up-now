@@ -1,11 +1,39 @@
+'use client';
+import { useState, useEffect } from 'react';
+import io from 'socket.io-client';
+import Link from 'next/link';
+
+const socket = io('http://localhost:5500');
+
 export default function Home() {
+  useEffect(() => {
+    socket.on('connect', () => {
+      console.log('connected');
+    });
+  }, []);
+  const [room, setRoom] = useState<Array<number>>([1, 2, 3, 4]);
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          building a poweful application &nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
+    <main className="p-10">
+      <div className="max-w-5xl mx-auto">
+
+        <div className="grid grid-cols-4 gap-4"
+        >
+          {room.map((item, index) => (
+            <div
+              className="border border-white"
+              key={index}
+            >
+              <div
+                className="flex h-28 items-center justify-center text-2xl"
+              >
+                {item}
+              </div>
+              <Link href={`/${item}`} className="w-full flex items-center justify-center py-2 text-2xl cursor-pointer bg-white text-black">
+                Join room
+              </Link>
+            </div>
+          ))}
+        </div>
       </div>
     </main>
   );
