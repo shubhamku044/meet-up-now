@@ -36,10 +36,6 @@ io.on('error', (err: Error) => {
 
 const PORT = 5500;
 
-/* app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}!`);
-}); */
-
 server.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });

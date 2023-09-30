@@ -1,18 +1,17 @@
 'use client';
-
 import { useState, useEffect } from 'react';
 import io from 'socket.io-client';
+import { useSearchParams } from 'next/navigation';
+
 const socket = io('http://localhost:5500');
 
 const VideoPage = ({ params }: { params: { id: string } }) => {
+  const searchParams = useSearchParams();
+  const name = searchParams.get('name');
   const [users, setUsers] = useState<Array<string>>([]);
-  const generateRandomString = () => {
-    const randomString = Math.random().toString(36).substring(2, 7);
-    return randomString;
-  };
   useEffect(() => {
-    socket.emit('join', generateRandomString());
-  }, []);
+    socket.emit('join', name);
+  }, [name]);
 
   useEffect(() => {
     socket.on('user-joined', (data: string) => {
