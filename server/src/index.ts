@@ -18,14 +18,9 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 io.on('connection', (socket: Socket) => {
-  socket.on('disconnect', () => {
-    console.log('user disconnected');
-  });
-
-  socket.on('join', (name: string) => {
-    console.log('user name', name);
-
-    socket.broadcast.emit('user-joined', name);
+  socket.on('join-room', (payload) => {
+    console.log('user joined', payload);
+    socket.broadcast.emit('user-connect', payload);
   });
 
 });

@@ -1,45 +1,37 @@
 'use client';
-import { useRef, useEffect } from 'react';
-import io from 'socket.io-client';
-import Link from 'next/link';
-
-const socket = io('http://localhost:5500');
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  useEffect(() => {
-    socket.on('connect', () => {
-      console.log('connected');
-    });
-  }, []);
-
-  const getVideo = () => {
-    if (!window.navigator) return;
-    window
-      .navigator
-      .mediaDevices
-      .getUserMedia({ video: true }).then((stream) => {
-        let video = videoRef.current;
-        (video as HTMLVideoElement).srcObject = stream;
-        (video as HTMLVideoElement).play();
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
-  /*
-    useEffect(() => {
-      getVideo();
-    }, []); */
+  const [roomCode, showRoomCode] = useState('');
+  const [name, setName] = useState('');
+  const router = useRouter();
 
   return (
     <main className="p-10">
       <div className="max-w-5xl mx-auto">
-        <video
-          className='w-64 aspect-square border-4 border-dashed'
-          ref={videoRef}
-        >
-        </video>
+        <div className='flex gap-4'>
+          <input
+            className='border-1 px-2 py-1 rounded w-54 text-black'
+            placeholder='Enter room number'
+            value={roomCode}
+            onChange={(e) => showRoomCode(e.target.value)}
+          />
+          <input
+            className='border-1 px-2 py-1 rounded w-54 text-black'
+            placeholder='Enter your name'
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <button
+            className='border-1 px-4 py-2 rounded bg-blue-500 text-xl'
+            onClick={() => {
+              router.push(`/${roomCode}?name=${name}`);
+            }}
+          >
+            Join
+          </button>
+        </div>
       </div>
     </main >
   );
